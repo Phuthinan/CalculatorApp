@@ -1,3 +1,4 @@
+import 'package:calculator/home_page.dart';
 import 'package:calculator/page/calculator_page.dart';
 import 'package:calculator/page/history_page.dart';
 import 'package:calculator/page/unit_converter_page.dart';
@@ -16,10 +17,10 @@ class _ResponsiveState extends State<Responsive> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
-          return HistoryPage();
+        if (constraints.maxWidth < 620) {
+          return HomePage();
         } else {
-          return HistoryTabPage();
+          return HomePageTab();
         }
       },
     );

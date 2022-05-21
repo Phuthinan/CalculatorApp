@@ -16,46 +16,11 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
         backgroundColor: AppColors.mainColor,
         body: Container(
-            margin: EdgeInsets.all(30),
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 60),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 120),
-              TextHis(
-                text: "Calculator",
-                size: 16,
-              ),
-              SizedBox(height: 2),
-              Row(children: [
-                TextHis(
-                  text: "12345679 x 9",
-                  size: 22.3689,
-                ),
-                SizedBox(width: 15),
-                TextHis(
-                  text: "= 1,11,11,111,111",
-                  size: 24.47,
-                  color: AppColors.whiteColor,
-                ),
-              ]),
-              SizedBox(height: 35),
-              TextHis(
-                text: "Calculator",
-                size: 16,
-              ),
-              SizedBox(height: 2),
-              Row(children: [
-                TextHis(
-                  text: "123+456",
-                  size: 22.3689,
-                ),
-                SizedBox(width: 15),
-                TextHis(
-                  text: "= 579",
-                  size: 24.47,
-                  color: AppColors.whiteColor,
-                ),
-              ]),
-              SizedBox(height: 35),
+              HistoryLabel(text: "12345679 x 9", amount: "1,11,11,111,111"),
+              HistoryLabel(text: "123+456", amount: "579"),
             ])));
   }
 }
@@ -73,47 +38,80 @@ class _HistoryTabPageState extends State<HistoryTabPage> {
     return Scaffold(
         backgroundColor: AppColors.mainColor,
         body: Container(
-            margin: EdgeInsets.all(30),
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 120),
-                  TextHis(
-                    text: "Calculator",
-                    size: 16,
-                  ),
-                  SizedBox(height: 2),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    TextHis(
-                      text: "12345679 x 9",
-                      size: 22.3689,
-                    ),
-                    SizedBox(width: 15),
-                    TextHis(
-                      text: "= 1,11,11,111,111",
-                      size: 24.47,
-                      color: AppColors.whiteColor,
-                    ),
-                  ]),
-                  SizedBox(height: 35),
-                  TextHis(
-                    text: "Calculator",
-                    size: 16,
-                  ),
-                  SizedBox(height: 2),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    TextHis(
-                      text: "123+456",
-                      size: 22.3689,
-                    ),
-                    SizedBox(width: 15),
-                    TextHis(
-                      text: "= 579",
-                      size: 24.47,
-                      color: AppColors.whiteColor,
-                    ),
-                  ]),
-                  SizedBox(height: 35),
+                  HistoryLabelTab(
+                      text: "12345679 x 9", amount: "1,11,11,111,111"),
+                  HistoryLabelTab(text: "123+456", amount: "579"),
                 ])));
+  }
+}
+
+class HistoryLabelTab extends StatelessWidget {
+  final String text;
+  final String amount;
+  HistoryLabelTab({Key? key, required this.text, required this.amount})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextHis(
+          text: "Calculator",
+          size: 16,
+        ),
+        SizedBox(height: 2),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          TextHis(
+            text: text,
+            size: 22.3689,
+          ),
+          SizedBox(width: 15),
+          TextHis(
+            text: "= ${amount}",
+            size: 24.47,
+            color: AppColors.whiteColor,
+          ),
+        ]),
+        SizedBox(height: 35),
+      ],
+    );
+  }
+}
+
+class HistoryLabel extends StatelessWidget {
+  final String text;
+  final String amount;
+  HistoryLabel({Key? key, required this.text, required this.amount})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextHis(
+          text: "Calculator",
+          size: 16,
+        ),
+        SizedBox(height: 2),
+        Row(children: [
+          TextHis(
+            text: text,
+            size: 22.3689,
+          ),
+          SizedBox(width: 15),
+          TextHis(
+            text: "= ${amount}",
+            size: 24.47,
+            color: AppColors.whiteColor,
+          ),
+        ]),
+        SizedBox(height: 35),
+      ],
+    );
   }
 }

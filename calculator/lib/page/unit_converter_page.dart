@@ -18,12 +18,9 @@ class _UnitConverterState extends State<UnitConverter> {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.only(left: 8, right: 8, bottom: 8, top: 60),
         child: Column(
           children: [
-            SizedBox(
-              height: 100,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -93,12 +90,9 @@ class _UnitConverterTabState extends State<UnitConverterTab> {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.only(left: 8, right: 8, bottom: 8, top: 40),
         child: Column(
           children: [
-            SizedBox(
-              height: 100,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
