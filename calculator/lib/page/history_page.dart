@@ -1,51 +1,83 @@
+import 'package:calculator/db/file_manager.dart';
 import 'package:calculator/widget/text.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/app_color.dart';
 
+class Data {
+  String equation = '';
+  String ans = '';
+  Data({required this.equation, required this.ans});
+}
+
+List<Data> ReadData(String content, List<Data> data) {
+  String equa = '';
+  String ans = '';
+  bool isEqua = true;
+  for (int i = 0; i < content.length; i++) {
+    if (isEqua) {
+      if (content[i] == ':') {
+        isEqua = false;
+      } else {
+        equa += content[i];
+      }
+    } else {
+      if (content[i] == '\n') {
+        data.add(Data(equation: equa, ans: ans));
+        equa = '';
+        ans = '';
+        isEqua = true;
+      } else {
+        ans += content[i];
+      }
+    }
+  }
+  return data;
+}
+
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({Key? key}) : super(key: key);
+  bool isPhone;
+  HistoryPage({Key? key, this.isPhone = true}) : super(key: key);
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  String contents = '';
+  List<Data> data = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.mainColor,
-        body: Container(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 60),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              HistoryLabel(text: "12345679 x 9", amount: "1,11,11,111,111"),
-              HistoryLabel(text: "123+456", amount: "579"),
-            ])));
-  }
-}
-
-class HistoryTabPage extends StatefulWidget {
-  const HistoryTabPage({Key? key}) : super(key: key);
-
-  @override
-  State<HistoryTabPage> createState() => _HistoryTabPageState();
-}
-
-class _HistoryTabPageState extends State<HistoryTabPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.mainColor,
-        body: Container(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 50),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  HistoryLabelTab(
-                      text: "12345679 x 9", amount: "1,11,11,111,111"),
-                  HistoryLabelTab(text: "123+456", amount: "579"),
-                ])));
+        body: data.length > 0
+            ? widget.isPhone
+                ? Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, bottom: 20, top: 60),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HistoryLabel(
+                              text: "12345679 x 9", amount: "1,11,11,111,111"),
+                          HistoryLabel(text: "123+456", amount: "579"),
+                        ]))
+                : Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, bottom: 20, top: 50),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          HistoryLabelTab(
+                              text: "12345679 x 9", amount: "1,11,11,111,111"),
+                          HistoryLabelTab(text: "123+456", amount: "579"),
+                        ]))
+            : Expanded(
+                child: Container(
+                color: AppColors.mainColor,
+              )));
   }
 }
 

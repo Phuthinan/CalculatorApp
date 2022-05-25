@@ -20,7 +20,9 @@ class _ResponsiveState extends State<Responsive> {
         if (constraints.maxWidth < 620) {
           return HomePage();
         } else {
-          return HomePageTab();
+          return HomePage(
+            isPhone: false,
+          );
         }
       },
     );

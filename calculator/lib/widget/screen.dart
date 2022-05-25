@@ -3,9 +3,16 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 import '../utils/app_color.dart';
 
-class Screen extends StatelessWidget {
-  const Screen({Key? key}) : super(key: key);
+class Screen extends StatefulWidget {
+  String amount;
+  String ans;
+  Screen({Key? key, required this.amount, required this.ans}) : super(key: key);
 
+  @override
+  State<Screen> createState() => _ScreenState();
+}
+
+class _ScreenState extends State<Screen> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +32,7 @@ class Screen extends StatelessWidget {
       padding: EdgeInsets.only(top: 30, left: 17, right: 21, bottom: 9),
       child: Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text("12345679 x 9",
+          Text(widget.amount,
               style: TextStyle(
                   color: AppColors.greyColor,
                   fontFamily: 'Poppins',
@@ -44,7 +51,7 @@ class Screen extends StatelessWidget {
                     fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w400,
                     fontSize: 16)),
-            Text("1,11,11,111,111",
+            Text(widget.ans,
                 style: TextStyle(
                     color: AppColors.whiteColor,
                     fontFamily: 'Poppins',
