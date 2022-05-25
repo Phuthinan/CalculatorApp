@@ -1,10 +1,7 @@
-// import 'package:calculator/data.dart';
 import 'package:calculator/utils/app_color.dart';
 import 'package:calculator/widget/screen.dart';
 import 'package:flutter/material.dart';
-import '../db/file_manager.dart';
-import '../widget/button_cal.dart';
-
+import '../widget/CalButton.dart';
 // import '../widget/button_cal.dart';
 
 class Calculator extends StatefulWidget {
@@ -26,14 +23,6 @@ class _CalculatorState extends State<Calculator> {
     });
   }
 
-  String Content(String equa, String ans) {
-    return "${equa}:${ans}\n";
-  }
-
-  saveData() {
-    FileUtils.writeContent(Content(amount, ans));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +34,7 @@ class _CalculatorState extends State<Calculator> {
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Screen(amount: amount, ans: ans),
-                  Expanded(
-                      child: Keypad(callback: callback, saveData: saveData))
+                  Expanded(child: KeyPad(callback))
                 ],
               ),
             )
@@ -60,14 +48,12 @@ class _CalculatorState extends State<Calculator> {
                     Expanded(
                         child: Container(
                       alignment: Alignment.topCenter,
-                      child: Screen(amount: Val.amount, ans: Val.ans),
+                      child: Screen(amount: amount, ans: ans),
 
                       // color: Colors.white,
                     )),
                     Expanded(
-                      child: Container(
-                          child:
-                              Keypad(callback: callback, saveData: saveData)),
+                      child: Container(child: KeyPad(callback)),
                       // color: Colors.green,
                     )
                   ],
@@ -76,153 +62,78 @@ class _CalculatorState extends State<Calculator> {
               ))),
     );
   }
-}
 
-class Keypad extends StatefulWidget {
-  Function callback;
-  Function saveData;
-  Keypad({Key? key, required this.callback, required this.saveData})
-      : super(key: key);
-
-  @override
-  State<Keypad> createState() => _KeypadState();
-}
-
-class _KeypadState extends State<Keypad> {
-  @override
-  Widget build(BuildContext context) {
+  Widget KeyPad(Function callback) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonCal(
-                text: "c",
-                btnKey: "c",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "%",
-                btnKey: "%",
-                callback: widget.callback,
-                saveData: widget.saveData),
+            ButtonCal(text: "c", btnKey: "c", callback: callback),
+            ButtonCal(text: "%", btnKey: "%", callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/Backspace.png",
                 btnKey: "del",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/Divide.png",
                 btnKey: "÷",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonCal(
-                text: "7",
-                btnKey: "7",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "8",
-                btnKey: "8",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "9",
-                btnKey: "9",
-                callback: widget.callback,
-                saveData: widget.saveData),
+            ButtonCal(text: "7", btnKey: "7", callback: callback),
+            ButtonCal(text: "8", btnKey: "8", callback: callback),
+            ButtonCal(text: "9", btnKey: "9", callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/X.png",
                 btnKey: "×",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonCal(
-                text: "4",
-                btnKey: "4",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "5",
-                btnKey: "5",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "6",
-                btnKey: "6",
-                callback: widget.callback,
-                saveData: widget.saveData),
+            ButtonCal(text: "4", btnKey: "4", callback: callback),
+            ButtonCal(text: "5", btnKey: "5", callback: callback),
+            ButtonCal(text: "6", btnKey: "6", callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/Minus.png",
                 btnKey: "-",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonCal(
-                text: "1",
-                btnKey: "1",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "2",
-                btnKey: "2",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "3",
-                btnKey: "3",
-                callback: widget.callback,
-                saveData: widget.saveData),
+            ButtonCal(text: "1", btnKey: "1", callback: callback),
+            ButtonCal(text: "2", btnKey: "2", callback: callback),
+            ButtonCal(text: "3", btnKey: "3", callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/Plus.png",
                 btnKey: "+",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonCal(
-                text: "00",
-                btnKey: "00",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: "0",
-                btnKey: "0",
-                callback: widget.callback,
-                saveData: widget.saveData),
-            ButtonCal(
-                text: ".",
-                btnKey: ".",
-                callback: widget.callback,
-                saveData: widget.saveData),
+            ButtonCal(text: "00", btnKey: "00", callback: callback),
+            ButtonCal(text: "0", btnKey: "0", callback: callback),
+            ButtonCal(text: ".", btnKey: ".", callback: callback),
             ButtonCal(
                 text: "assets/button/calculator/Equals.png",
                 btnKey: "=",
                 istext: false,
-                callback: widget.callback,
-                saveData: widget.saveData),
+                callback: callback),
           ],
         ),
       ],

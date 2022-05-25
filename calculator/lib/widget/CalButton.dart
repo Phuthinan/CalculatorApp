@@ -1,18 +1,31 @@
-import 'package:calculator/db/file_manager.dart';
+import 'dart:io';
+
+import 'package:calculator/model/model.dart';
 import 'package:calculator/utils/app_color.dart';
 import 'package:calculator/utils/calculate.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../boxes.dart';
+import '../db/file_manager.dart';
 
 class Val {
   static String amount = '';
   static String ans = '';
+  static bool isEqual = false;
+}
+
+Future addModel(String equation, String ans) async {
+  final model = Model()
+    ..equation = equation
+    ..ans = ans;
+  final box = Boxes.getModel();
+  box.add(model);
 }
 
 class ButtonCal extends StatefulWidget {
+  static final FileUtils fileUtils = FileUtils();
   final String text;
   final Function callback;
-  final Function saveData;
   final String btnKey;
   Color logocolor;
   double size;
@@ -24,8 +37,7 @@ class ButtonCal extends StatefulWidget {
       this.logocolor = const Color(0xFF747474),
       this.size = 35,
       required this.btnKey,
-      required this.callback,
-      required this.saveData})
+      required this.callback})
       : super(key: key);
 
   @override
@@ -33,97 +45,77 @@ class ButtonCal extends StatefulWidget {
 }
 
 class _ButtonCalState extends State<ButtonCal> {
-  late String keybtn;
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    Val.amount = '';
   }
+
+  late ReturnData ans;
+  String contents = '';
 
   @override
   Widget build(BuildContext context) {
     bool isPercent = false;
+    saveData(String equa, String ans) {
+      String content = '';
+      setState(() {
+        content = "${equa}:${ans}\n";
+      });
+      ButtonCal.fileUtils.writeContent(content);
+    }
+
     return RaisedButton(
       shape: CircleBorder(),
       color: AppColors.mainColor,
       onPressed: () {
-        if (widget.btnKey == '=') {
-          print("enter");
-          widget.saveData;
-        }
         setState(() {
-          keybtn = widget.btnKey;
           if (Val.amount == '') {
-            if (!(IsOperator(keybtn) ||
-                keybtn == '%' ||
-                keybtn == 'del' ||
-                keybtn == '=' ||
-                keybtn == 'c')) {
-              Val.amount += keybtn;
-              Val.ans = FinalCal(Val.amount);
-
-              // print(Val.ans);
+            if (!(IsOperator(widget.btnKey) ||
+                widget.btnKey == '%' ||
+                widget.btnKey == 'del' ||
+                widget.btnKey == '=' ||
+                widget.btnKey == 'c')) {
+              Val.amount += widget.btnKey;
             }
+            ans = FinalCal(Val.amount);
+            widget.callback(Val.amount, '');
           } else {
-            if (widget.btnKey == 'del') {
-              //delete last ch
-              Val.amount = Val.amount.substring(0, Val.amount.length - 1);
-              Val.ans = FinalCal(Val.amount);
-            } else if (widget.btnKey == 'c') {
-              // clear data
-              Val.ans = '';
-              Val.amount = '';
-            } else if (widget.btnKey == '=') {
-              Val.ans = FinalCal(Val.amount);
-
-              //save to storage
-              //show in screen
-
-              //clear data
-              Val.ans = '';
-              Val.amount = '';
-            } else if (IsOperator(keybtn)) {
-              if (IsOperator(Val.amount[Val.amount.length - 1])) {
-                // change operator
+            if ((IsOperator(widget.btnKey) ||
+                widget.btnKey == 'del' ||
+                widget.btnKey == 'c')) {
+              if (widget.btnKey == 'del') {
                 Val.amount = Val.amount.substring(0, Val.amount.length - 1);
-                Val.amount += keybtn;
-                Val.ans = FinalCal(Val.amount);
-                widget.callback(Val.amount, Val.ans);
-              } else {
-                Val.amount += keybtn;
-                Val.ans = FinalCal(Val.amount);
-
-                widget.callback(Val.amount, Val.ans);
-
-                // print(Val.ans);
+              } else if (widget.btnKey == 'c') {
+                Val.amount = '';
+              } else if (IsOperator(widget.btnKey)) {
+                if (IsOperator(Val.amount[Val.amount.length - 1])) {
+                  Val.amount = Val.amount.substring(0, Val.amount.length - 1);
+                  Val.amount += widget.btnKey;
+                } else {
+                  Val.amount += widget.btnKey;
+                }
               }
-            } else if (isPercent) {
-              print("yoooo");
-              Val.amount = Val.amount + 'x';
-              widget.callback(Val.amount, Val.ans);
-
-              Val.ans = FinalCal(Val.amount);
-              isPercent = false;
-
-              print(Val.ans);
+            } else if (widget.btnKey == '=') {
+              ans = FinalCal(Val.amount);
             } else {
-              Val.amount += keybtn;
+              if (Val.amount[Val.amount.length - 1] == '%') {
+                Val.amount += '×';
+              }
+              Val.amount += widget.btnKey;
             }
-            Val.ans = FinalCal(Val.amount);
-
-            // print(Val.ans);
-            // widget.callback(Val.amount, Val.ans);
-
           }
-          widget.callback(Val.amount, Val.ans);
-          if (keybtn == '%') {
-            isPercent = true;
-          }
-          // print(isPercent);
-
-          // print("AMOUNT = " + Val.amount);
-          // print('ans=' + Val.ans);
         });
+        if (widget.btnKey == '=') {
+          if (ans.isError) {
+            widget.callback(Val.amount, 'error');
+          } else {
+            widget.callback(Val.amount, ans.sum);
+            addModel(Val.amount, ans.sum);
+          }
+        } else {
+          widget.callback(Val.amount, '');
+        }
       },
       child: widget.istext
           ? Container(

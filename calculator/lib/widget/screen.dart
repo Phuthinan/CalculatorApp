@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
@@ -30,16 +31,21 @@ class _ScreenState extends State<Screen> {
       ]),
       margin: EdgeInsets.all(24),
       padding: EdgeInsets.only(top: 30, left: 17, right: 21, bottom: 9),
-      child: Column(children: [
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text(widget.amount,
-              style: TextStyle(
-                  color: AppColors.greyColor,
-                  fontFamily: 'Poppins',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 32))
-        ]),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        SingleChildScrollView(
+          reverse: true,
+          scrollDirection: Axis.horizontal,
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Text(widget.amount,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                    color: AppColors.greyColor,
+                    fontFamily: 'Poppins',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 32))
+          ]),
+        ),
         SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

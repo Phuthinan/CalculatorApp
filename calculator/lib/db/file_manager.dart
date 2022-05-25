@@ -3,18 +3,19 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class FileUtils {
-  static Future<String> get getFilePath async {
+  Future<String> get getFilePath async {
     final directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
     return directory.path;
   }
 
-  static Future<File> get getFile async {
+  Future<File> get getFile async {
     final path = await getFilePath;
+    print('hea');
+
     return File('$path/data.txt');
   }
 
-  static Future<String> readContent() async {
+  Future<String> readContent() async {
     try {
       final file = await getFile;
       // Read the file
@@ -27,9 +28,9 @@ class FileUtils {
     }
   }
 
-  static Future<File> writeContent(String contents) async {
+  Future<File> writeContent(String contents) async {
     final file = await getFile;
     // Write the file
-    return file.writeAsString(contents);
+    return file.writeAsString(contents, flush: false);
   }
 }

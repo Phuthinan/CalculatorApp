@@ -1,40 +1,11 @@
-import 'package:calculator/db/file_manager.dart';
+import 'package:calculator/boxes.dart';
 import 'package:calculator/widget/text.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+// import '../db/file_manager.dart';
+import '../model/model.dart';
 import '../utils/app_color.dart';
-
-class Data {
-  String equation = '';
-  String ans = '';
-  Data({required this.equation, required this.ans});
-}
-
-List<Data> ReadData(String content, List<Data> data) {
-  String equa = '';
-  String ans = '';
-  bool isEqua = true;
-  for (int i = 0; i < content.length; i++) {
-    if (isEqua) {
-      if (content[i] == ':') {
-        isEqua = false;
-      } else {
-        equa += content[i];
-      }
-    } else {
-      if (content[i] == '\n') {
-        data.add(Data(equation: equa, ans: ans));
-        equa = '';
-        ans = '';
-        isEqua = true;
-      } else {
-        ans += content[i];
-      }
-    }
-  }
-  return data;
-}
 
 class HistoryPage extends StatefulWidget {
   bool isPhone;
@@ -45,39 +16,32 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  String contents = '';
-  List<Data> data = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.mainColor,
-        body: data.length > 0
-            ? widget.isPhone
-                ? Container(
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, bottom: 20, top: 60),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          HistoryLabel(
-                              text: "12345679 x 9", amount: "1,11,11,111,111"),
-                          HistoryLabel(text: "123+456", amount: "579"),
-                        ]))
-                : Container(
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, bottom: 20, top: 50),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          HistoryLabelTab(
-                              text: "12345679 x 9", amount: "1,11,11,111,111"),
-                          HistoryLabelTab(text: "123+456", amount: "579"),
-                        ]))
-            : Expanded(
-                child: Container(
-                color: AppColors.mainColor,
-              )));
+        body: ValueListenableBuilder<Box<Model>>(
+            valueListenable: Boxes.getModel().listenable(),
+            builder: (context, box, _) {
+              final models = box.values.toList().cast<Model>();
+              return buildContent(models, widget.isPhone);
+            }));
+  }
+
+  Widget buildContent(List<Model> model, bool isPhone) {
+    return ListView.builder(
+        padding: isPhone
+            ? EdgeInsets.only(left: 50, right: 20, top: 60)
+            : EdgeInsets.only(left: 20, right: 20, top: 50),
+        itemCount: model.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+              child: widget.isPhone
+                  ? HistoryLabel(
+                      text: model[index].equation, amount: model[index].ans)
+                  : HistoryLabelTab(
+                      text: model[index].equation, amount: model[index].ans));
+        });
   }
 }
 
@@ -90,6 +54,7 @@ class HistoryLabelTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextHis(
           text: "Calculator",
